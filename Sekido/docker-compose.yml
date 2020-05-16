@@ -38,6 +38,17 @@ services:
     volumes:
       - redis-data:/data
 
+  minio:
+    image: minio/minio
+    environment: 
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY} # アクセスキー
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY} # シークレットキー
+    ports: 
+      - 9000:9000
+    command: server /data
+    volumes:
+      - minio-data:/data
+
 networks:
   default:
     driver: bridge
@@ -46,4 +57,6 @@ volumes:
   mysql-data:
     driver: local
   redis-data:
+    driver: local
+  minio-data:
     driver: local

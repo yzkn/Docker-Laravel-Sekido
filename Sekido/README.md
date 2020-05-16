@@ -68,6 +68,23 @@ mysql> update users set role = 1 where id = 1;
 mysql> \q
 ```
 
+## MinIO
+
+http://localhost:9000 にアクセスし、バケットを作成しておく
+
+```sh
+$ docker-compose exec php-fpm composer require league/flysystem-aws-s3-v3
+```
+
+```sh
+$ docker-compose run --rm --no-deps php-fpm composer require league/flysystem-aws-s3-v3
+
+$ sudo nano ../app/sekido/.env
+
+$ sudo nano ../app/sekido/config/filesystems.php
+
+```
+
 ---
 
 ## Backup
