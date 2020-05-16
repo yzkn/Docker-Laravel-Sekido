@@ -1,0 +1,10 @@
+#!/bin/sh
+
+(
+mysql -uroot -p$MYSQL_ROOT_PASSWORD <<EOF
+    CREATE DATABASE ${MYSQL_DATABASE};
+    GRANT ALL ON ${MYSQL_DATABASE}.* to ${MYSQL_USER_NAME}@localhost;
+    FLUSH PRIVILEGES;
+    SET PASSWORD FOR ${MYSQL_USER_NAME}@localhost=password('${MYSQL_USER_PASSWORD}');
+EOF
+)

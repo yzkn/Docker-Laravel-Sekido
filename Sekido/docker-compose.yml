@@ -1,0 +1,49 @@
+version: "3"
+services:
+  php-fpm:
+    image: laravel-php-fpm:7
+    build: ./php-fpm/
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ../app/sekido:/var/www/html
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - php-fpm
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../app/sekido:/var/www/html
+      - ./nginx/logs:/var/log/nginx
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # MySQLのrootパスワード
+      MYSQL_DATABASE: ${MYSQL_DATABASE}           # DB名
+      MYSQL_USER: ${MYSQL_USER_NAME}              # ユーザー名
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}      # パスワード
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+
+networks:
+  default:
+    driver: bridge
+
+volumes: 
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
