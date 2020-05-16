@@ -1,0 +1,68 @@
+.table-calendar {
+    background-color: #fff;
+}
+
+.table-calendar caption {
+    caption-side: top;
+    text-align: center;
+}
+
+.table-calendar th {
+    text-align: center;
+}
+
+.table-calendar td {
+    text-align: right;
+}
+
+.table-calendar,
+.table-calendar a:link,
+.table-calendar a:visited,
+.table-calendar a:hover,
+.table-calendar a:active {
+    color: #666;
+}
+
+.sun,
+.sun a:link,
+.sun a:visited,
+.sun a:hover,
+.sun a:active {
+    color: #f66;
+}
+
+.sat,
+.sat a:link,
+.sat a:visited,
+.sat a:hover,
+.sat a:active {
+    color: #66f;
+}
+
+.today {
+    background-color: #fc9;
+}
+
+.out-date,
+.out-date a:link,
+.out-date a:visited,
+.out-date a:hover,
+.out-date a:active {
+    color: #ddd;
+}
+
+.out-date.sun,
+.out-date.sun a:link,
+.out-date.sun a:visited,
+.out-date.sun a:hover,
+.out-date.sun a:active {
+    color: #fdd;
+}
+
+.out-date.sat,
+.out-date.sat a:link,
+.out-date.sat a:visited,
+.out-date.sat a:hover,
+.out-date.sat a:active {
+    color: #ddf;
+}

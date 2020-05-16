@@ -1,0 +1,36 @@
+.music-item-thumbnail {
+    width: 36px;
+    height: 36px;
+}
+
+.cover-cloud-item-thumbnail {
+    width: 72px;
+    height: 72px;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* navbar */
+
+.dropdown_music_list_sub {
+    position: absolute;
+    top: 0;
+    left: 40px;
+    width: 100%;
+    background: #FFF;
+    border: 1px solid rgba(0, 0, 0, .15);
+    visibility: hidden;
+}
+
+.dropdown_music_list {
+    position: relative;
+}
+
+.dropdown_music_list:hover .dropdown_music_list_sub {
+    visibility: visible;
+}
+
+/* navbar */
