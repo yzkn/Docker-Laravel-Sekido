@@ -18,17 +18,23 @@ class FileController extends Controller
         Log::debug('$path: '.$path);
 
         $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('covers').'/'.basename($path));
-        Log::debug('$path: '.$path);
 
-        // if(file_exists($path) && $img_type = exif_imagetype($path)){
+        // // local
+        // $is_valid = (file_exists($path) && $img_type = exif_imagetype($path));
+        // s3
+        $tempurl = Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(1));
+        $is_valid = ($img_type = exif_imagetype($tempurl));
+        //
+
+        if($is_valid){
             $contents = Storage::get($path);
             // Log::debug('$contents: '.$contents);
             $response = Response::make($contents, 200);
             $response->header('Content-Type', 'image/jpeg');
             return $response;
-        // }else{
-        //     abort(404);
-        // }
+        }else{
+            abort(404);
+        }
     }
 
     public function documents($path)
@@ -68,27 +74,48 @@ class FileController extends Controller
         $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('musics').'/'.basename($path));
         Log::debug('$path: '.$path);
 
-        // $getID3 = new \getID3();
+        $getID3 = new \getID3();
 
         // // local
-        // // $tag = $getID3->analyze($path);
-        // // s3
-        // $inputStream = Storage::disk('s3')->getDriver()->getAdapter()->getPathPrefix().'/'.$path;
-        // $destination = Storage::disk('local')->getDriver()->readStream('/tmp/'.$path);
-        // Storage::disk('s3')->getDriver()->putStream($destination, $inputStream);
-        // $tag = $getID3->analyze($destination);
-        // //
-
+        // $tag = $getID3->analyze($path);
         // Log::debug('$tag: '.print_r($tag, true));//[fileformat]
 
         // if(file_exists($path) && ('mp3' === $tag['fileformat'])){
-            $contents = Storage::get($path);
-            // Log::debug('$contents: '.$contents);
-            $response = Response::make($contents, 200);
-            $response->header('Content-Type', 'audio/mpeg');
-            return $response;
+        //     $contents = Storage::get($path);
+        //     // Log::debug('$contents: '.$contents);
+        //     $response = Response::make($contents, 200);
+        //     $response->header('Content-Type', 'audio/mpeg');
+        //     return $response;
         // }else{
         //     abort(404);
         // }
+        // s3
+        $targetFile = uniqid();
+        $inputStream = Storage::disk('s3')->getDriver()->readStream($path);
+        Log::debug('$targetFile: '.$targetFile);
+        Log::debug('$inputStream: '.$inputStream);
+        Storage::disk('local')->getDriver()->writeStream($targetFile, $inputStream);
+
+        if(Storage::disk('local')->exists($targetFile)){
+            $targetFilecontents = Storage::disk('local')->get($targetFile);
+            // Log::debug('$targetFilecontents: '.$targetFilecontents);
+            $tag = $getID3->analyze(storage_path('app').'/'.$targetFile);
+            Log::debug('$tag: '.print_r($tag, true));//[fileformat]
+
+            // Storage::disk('local')->delete($targetFile);
+
+            if('mp3' === $tag['fileformat']){
+                $contents = Storage::get($path);
+                // Log::debug('$contents: '.$contents);
+                $response = Response::make($contents, 200);
+                $response->header('Content-Type', 'audio/mpeg');
+                return $response;
+            }else{
+                abort(404);
+            }
+        }else{
+            abort(404);
+        }
+        //
     }
 }
