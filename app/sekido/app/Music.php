@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Music extends Model
 {
+    protected $table = 'musics';
     protected $fillable = [
         'album',
         'artist',

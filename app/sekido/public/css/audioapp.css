@@ -13,6 +13,14 @@
     height: 24px;
 }
 
+.info {
+    display: none;
+}
+
+.search-buttons {
+    font-size: small !important;
+}
+
 /* navbar */
 
 .dropdown_music_list_sub {
