@@ -52,7 +52,9 @@ class MusicController extends Controller
         Log::debug('User: ' . Auth::user());
         Log::debug('$request: ' . $request);
 
+        $getID3 = new \getID3();
         $genre_list = \getid3_id3v1::ArrayOfGenres();
+        // Log::debug('$genre_list: ' . join(" ", $genre_list));
         $sort_list = [
             'album', 'artist', 'created_at', 'genre', 'originalArtist', 'related_works', 'title', 'year', 'track_num', 'playtime_seconds', '-album', '-artist', '-created_at', '-genre', '-originalArtist', '-related_works', '-title', '-year', '-track_num', '-playtime_seconds', 'artist title', '-artist title', 'artist album title', '-artist album title', 'artist album track_num', '-artist album track_num', 'random'
         ];

@@ -100,9 +100,9 @@ class FileController extends Controller
             $targetFilecontents = Storage::disk('local')->get($targetFile);
             // Log::debug('$targetFilecontents: '.$targetFilecontents);
             $tag = $getID3->analyze(storage_path('app').'/'.$targetFile);
-            Log::debug('$tag: '.print_r($tag, true));//[fileformat]
+            // Log::debug('$tag: '.print_r($tag, true));//[fileformat]
 
-            // Storage::disk('local')->delete($targetFile);
+            Storage::disk('local')->delete($targetFile);
 
             if('mp3' === $tag['fileformat']){
                 $contents = Storage::get($path);
