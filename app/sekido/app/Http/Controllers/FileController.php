@@ -19,12 +19,12 @@ class FileController extends Controller
 
         $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('covers').'/'.basename($path));
 
-        // // local
-        // $is_valid = (file_exists($path) && $img_type = exif_imagetype($path));
-        // s3
-        $tempurl = Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(1));
-        $is_valid = ($img_type = exif_imagetype($tempurl));
-        //
+        if('local'===config('filesystems.default', 'local')){
+            $is_valid = (file_exists($path) && $img_type = exif_imagetype($path));
+        } else if('s3'===config('filesystems.default', 'local')){
+            $tempurl = Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(1));
+            $is_valid = ($img_type = exif_imagetype($tempurl));
+        }
 
         if($is_valid){
             $contents = Storage::get($path);
@@ -76,35 +76,11 @@ class FileController extends Controller
 
         $getID3 = new \getID3();
 
-        // // local
-        // $tag = $getID3->analyze($path);
-        // Log::debug('$tag: '.print_r($tag, true));//[fileformat]
+        if('local'===config('filesystems.default', 'local')){
+            $tag = $getID3->analyze($path);
+            Log::debug('$tag: '.print_r($tag, true));//[fileformat]
 
-        // if(file_exists($path) && ('mp3' === $tag['fileformat'])){
-        //     $contents = Storage::get($path);
-        //     // Log::debug('$contents: '.$contents);
-        //     $response = Response::make($contents, 200);
-        //     $response->header('Content-Type', 'audio/mpeg');
-        //     return $response;
-        // }else{
-        //     abort(404);
-        // }
-        // s3
-        $targetFile = uniqid();
-        $inputStream = Storage::disk('s3')->getDriver()->readStream($path);
-        Log::debug('$targetFile: '.$targetFile);
-        Log::debug('$inputStream: '.$inputStream);
-        Storage::disk('local')->getDriver()->writeStream($targetFile, $inputStream);
-
-        if(Storage::disk('local')->exists($targetFile)){
-            $targetFilecontents = Storage::disk('local')->get($targetFile);
-            // Log::debug('$targetFilecontents: '.$targetFilecontents);
-            $tag = $getID3->analyze(storage_path('app').'/'.$targetFile);
-            // Log::debug('$tag: '.print_r($tag, true));//[fileformat]
-
-            Storage::disk('local')->delete($targetFile);
-
-            if('mp3' === $tag['fileformat']){
+            if(file_exists($path) && ('mp3' === $tag['fileformat'])){
                 $contents = Storage::get($path);
                 // Log::debug('$contents: '.$contents);
                 $response = Response::make($contents, 200);
@@ -113,9 +89,33 @@ class FileController extends Controller
             }else{
                 abort(404);
             }
-        }else{
-            abort(404);
+        } else if('s3'===config('filesystems.default', 'local')){
+            $targetFile = uniqid();
+            $inputStream = Storage::disk('s3')->getDriver()->readStream($path);
+            Log::debug('$targetFile: '.$targetFile);
+            Log::debug('$inputStream: '.$inputStream);
+            Storage::disk('local')->getDriver()->writeStream($targetFile, $inputStream);
+
+            if(Storage::disk('local')->exists($targetFile)){
+                $targetFilecontents = Storage::disk('local')->get($targetFile);
+                // Log::debug('$targetFilecontents: '.$targetFilecontents);
+                $tag = $getID3->analyze(storage_path('app').'/'.$targetFile);
+                // Log::debug('$tag: '.print_r($tag, true));//[fileformat]
+
+                Storage::disk('local')->delete($targetFile);
+
+                if('mp3' === $tag['fileformat']){
+                    $contents = Storage::get($path);
+                    // Log::debug('$contents: '.$contents);
+                    $response = Response::make($contents, 200);
+                    $response->header('Content-Type', 'audio/mpeg');
+                    return $response;
+                }else{
+                    abort(404);
+                }
+            }else{
+                abort(404);
+            }
         }
-        //
     }
 }
