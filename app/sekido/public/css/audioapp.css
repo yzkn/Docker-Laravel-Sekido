@@ -21,6 +21,11 @@
     font-size: small !important;
 }
 
+.document-thumbnail {
+    width: 240px;
+    height: 240px;
+}
+
 /* navbar */
 
 .dropdown_music_list_sub {

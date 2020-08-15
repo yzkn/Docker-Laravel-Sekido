@@ -68,6 +68,8 @@
                                         @if('' !== $music->document)
                                             <a href="{{route('home')}}{{ $music->document }}" target="_blank">
                                                 {{ basename($music->document) }}
+                                                <br>
+                                                <img class="img-thumbnail document-thumbnail" src="{{ $music->document . '.png' }}" />
                                             </a>
                                         @endif
                                     @endisset

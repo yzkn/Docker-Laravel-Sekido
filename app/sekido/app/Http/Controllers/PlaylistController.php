@@ -95,8 +95,8 @@ class PlaylistController extends Controller
                 }
             }
 
-            Log::debug('old_music: ' . print_r($old_music, true));
-            Log::debug('new_music: ' . print_r($new_music, true));
+            // Log::debug('old_music: ' . print_r($old_music, true));
+            // Log::debug('new_music: ' . print_r($new_music, true));
 
             $add = array_diff($new_music, $old_music);
             $remove = array_diff($old_music, $new_music);
