@@ -7,12 +7,22 @@ $(function () {
                 ? $("ol li.playing a .info").text()
                 : ""
         );
+        $("#playing_title").text(
+            $("ol li.playing a .info .title").text()
+                ? $("ol li.playing a .info .title").text()
+                : ""
+        );
+        $("#playing_thumbnail").attr('src',
+            $("ol li.playing a img").attr('src')
+                ? $("ol li.playing a img").attr('src')
+                : ""
+        );
         $("#twitter_share").attr(
             "href",
             baseurl_tweet +
-                ($("ol li.playing a .info").text()
-                    ? encodeURIComponent($("ol li.playing a .info").text())
-                    : "")
+            ($("ol li.playing a .info").text()
+                ? encodeURIComponent($("ol li.playing a .info").text())
+                : "")
         );
     }
 

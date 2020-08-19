@@ -3,6 +3,11 @@
     height: 36px;
 }
 
+.music-jumbotron-thumbnail {
+    width: 180px;
+    height: 180px;
+}
+
 .cover-cloud-item-thumbnail {
     width: 72px;
     height: 72px;

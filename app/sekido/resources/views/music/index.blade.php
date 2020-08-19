@@ -8,7 +8,8 @@
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
         <div class="col-md-12">
             <div class="jumbotron my-5">
-                <h1 class="display-4 my-3">Player</h1>
+                <img src="" class="img-thumbnail music-jumbotron-thumbnail" id="playing_thumbnail">
+                <h1 class="display-4 my-3" id="playing_title"></h1>
                 <hr class="my-4">
                 <div class="row mt-3 col-sm-10 offset-sm-2">
                     <div class="marquee">
