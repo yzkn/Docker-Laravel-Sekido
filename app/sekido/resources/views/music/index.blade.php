@@ -8,21 +8,33 @@
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
         <div class="col-md-12">
             <div class="jumbotron my-5">
-                <img src="" class="img-thumbnail music-jumbotron-thumbnail" id="playing_thumbnail">
-                <h1 class="display-4 my-3" id="playing_title"></h1>
-                <hr class="my-4">
-                <div class="row mt-3 col-sm-10 offset-sm-2">
-                    <div class="marquee">
-                        <p id="audio-info"></p>
+                <div class="row mt-3 col-sm-12">
+                    <div class="col-sm-4">
+                        <img src="" class="img-thumbnail music-jumbotron-thumbnail" id="playing_thumbnail">
                     </div>
-                    <a id="twitter_share" href="#" target="_blank">
-                        <img class="icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
-                    </a>
+                    <div class="col-sm-7 d-flex align-items-end">
+                        <div class="marquee">
+                            <p id="audio-info"></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 d-flex align-items-end">
+                        <a id="twitter_share" href="#" target="_blank">
+                            <img class="icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
+                        </a>
+                    </div>
                 </div>
-                <div class="row mt-1 col-sm-10 offset-sm-2">
+                <hr class="my-4">
+                <div class="row mt-5 col-sm-10 offset-sm-2">
                     @isset ($musics)
                     @if (count($musics)>0)
-                    <audio autoplay preload="auto"></audio>
+                    <canvas id='visualizer_canvas' width="450" height="200"></canvas>
+                    @endif
+                    @endisset
+                </div>
+                <div class="row mt-3 col-sm-10 offset-sm-2">
+                    @isset ($musics)
+                    @if (count($musics)>0)
+                    <audio id="audio" preload="auto"></audio>
                     @endif
                     @endisset
                 </div>
@@ -90,4 +102,5 @@
     crossorigin="anonymous"></script>
 <script src="{{ asset('js/audio.js') }}"></script>
 <script src="{{ asset('js/audioapp.js') }}"></script>
+<script src="{{ asset('js/visualizer.js') }}"></script>
 @endsection
