@@ -380,7 +380,7 @@ class MusicController extends Controller
 
                     if(Storage::disk('local')->exists($targetFile)){
                         $targetFilecontents = Storage::disk('local')->get($targetFile);
-                        Log::debug('$targetFilecontents: '.$targetFilecontents);
+                        // Log::debug('$targetFilecontents: '.$targetFilecontents);
                         $magick_input_file = storage_path('app').DIRECTORY_SEPARATOR.$targetFile;
                         $magick_output_file = $magick_input_file . '.png';
                         Log::debug('$magick_input_file: '.$magick_input_file);
@@ -395,11 +395,13 @@ class MusicController extends Controller
                         $output = shell_exec($shell_cmd);
                         Log::debug('output: ' . print_r($output, true));
 
-                        $inputStream2 = Storage::getDriver()->readStream($targetFile.'.png');
-                        $targetFilePath2 = 'documents/' . $stored . '.png';
+                        Log::debug('output::');
+                        $inputStream2 = Storage::disk('local')->getDriver()->readStream($targetFile.'.png');
                         Log::debug('$inputStream2: '.$targetFile.'.png');
+                        $targetFilePath2 = 'documents/' . $stored . '.png';
                         Log::debug('$targetFilePath2: '.$targetFilePath2);
-                        Storage::disk('local')->getDriver()->writeStream($targetFilePath2, $inputStream2);
+                        Storage::getDriver()->writeStream($targetFilePath2, $inputStream2);
+                        Log::debug("Storage::disk('local')->getDriver()->writeStream($targetFilePath2, $inputStream2)");
 
                         Storage::disk('local')->delete($targetFile);
                         Storage::disk('local')->delete($targetFile.'.png');

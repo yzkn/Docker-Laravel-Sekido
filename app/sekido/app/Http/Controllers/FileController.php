@@ -48,7 +48,9 @@ class FileController extends Controller
         $path = 'documents'.'/'.basename($path);
         Log::debug('$path: '.$path);
 
-        $magic = file_get_contents($abspath, false, null, 0, 12);
+        $contents = Storage::get($path);
+        $magic = substr($contents, 0, 12);
+        Log::debug('$magic: '.$magic);
 
         if(Storage::exists($path) && (strpos($magic, "%PDF-1") === 0)){
             $contents = Storage::get($path);
