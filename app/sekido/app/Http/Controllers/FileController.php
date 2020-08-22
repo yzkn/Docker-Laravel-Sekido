@@ -45,6 +45,7 @@ class FileController extends Controller
         Log::debug('$path: '.$path);
 
         $abspath = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('documents').'/'.basename($path));
+        Log::debug('$abspath: '.$abspath);
         $path = 'documents'.'/'.basename($path);
         Log::debug('$path: '.$path);
 
@@ -58,12 +59,23 @@ class FileController extends Controller
             $response = Response::make($contents, 200);
             $response->header('Content-Type', 'application/pdf');
             return $response;
-        }else if(Storage::exists($path) && $img_type = exif_imagetype($abspath)){
-            $contents = Storage::get($path);
-            // Log::debug('$contents: '.$contents);
-            $response = Response::make($contents, 200);
-            $response->header('Content-Type', image_type_to_mime_type($img_type));
-            return $response;
+        }else if(Storage::exists($path)){
+
+            if('local'===config('filesystems.default', 'local')){
+                $is_valid = ($img_type = exif_imagetype($abspath));
+            } else if('s3'===config('filesystems.default', 'local')){
+                $tempurl = Storage::temporaryUrl($path, now()->addMinutes(1));
+                $is_valid = ($img_type = exif_imagetype($tempurl));
+            }
+            if($is_valid){
+                $contents = Storage::get($path);
+                // Log::debug('$contents: '.$contents);
+                $response = Response::make($contents, 200);
+                $response->header('Content-Type', image_type_to_mime_type($img_type));
+                return $response;
+            }else{
+                abort(404);
+            }
         }else{
             abort(404);
         }
