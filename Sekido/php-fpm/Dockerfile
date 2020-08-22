@@ -15,6 +15,8 @@ RUN apt-get update \
         php-oauth \
         unzip \
         zlib1g-dev \
+        imagemagick \
+        libmagickwand-dev \
     && rm -rf /var/lib/apt/lists/* \
     && sed -iE '/^listen/s/\/run\/php\/php7\.3-fpm\.sock/9000/g' /etc/php/7.3/fpm/pool.d/www.conf \
     && mkdir -p /var/www/html \
