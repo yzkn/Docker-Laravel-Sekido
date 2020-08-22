@@ -361,48 +361,52 @@ class MusicController extends Controller
                 $document = $request->file('document');
                 Log::debug('document: ' . print_r($document, true));
                 if ($document->isValid([])) {
-                    // Log::debug('document: ' . print_r($document, true));
+                    Log::debug('document: ' . print_r($document, true));
                     $stored = basename($document->store('documents'));
                     Log::debug('stored: ' . $stored);
 
                     $path = $document->path();
-                    // Log::debug('$path: ' . $path);
+                    Log::debug('$path: ' . $path);
                     $older_document_path = $music->document;
-                    // Log::debug('$older_document_path: ' . $older_document_path);
+                    Log::debug('$older_document_path: ' . $older_document_path);
                     $music->document = '/d/' . $stored;
-                    // Log::debug('$music->document: ' . $music->document);
+                    Log::debug('$music->document: ' . $music->document);
 
-                    if (null === $music->cover || '' === $music->cover || (strrpos($older_music_cover, '.pdf.png') === strlen($older_music_cover) - strlen('.pdf.png'))) {
-                        $targetFile = uniqid();
-                        $inputStream = Storage::getDriver()->readStream('documents/' . $stored);
-                        // Log::debug('$targetFile: '.$targetFile);
-                        // Log::debug('$inputStream: '.$inputStream);
-                        Storage::disk('local')->getDriver()->writeStream($targetFile, $inputStream);
+                    $targetFile = uniqid();
+                    $inputStream = Storage::getDriver()->readStream('documents/' . $stored);
+                    Log::debug('$targetFile: '.$targetFile);
+                    Log::debug('$inputStream: '.$inputStream);
+                    Storage::disk('local')->getDriver()->writeStream($targetFile, $inputStream);
 
-                        if(Storage::disk('local')->exists($targetFile)){
-                            $targetFilecontents = Storage::disk('local')->get($targetFile);
-                            // Log::debug('$targetFilecontents: '.$targetFilecontents);
-                            $magick_input_file = storage_path('app').DIRECTORY_SEPARATOR.$targetFile;
-                            $magick_output_file = $magick_input_file . '.png';
-                            Log::debug('$magick_input_file: '.$magick_input_file);
-                            Log::debug('$magick_output_file: '.$magick_output_file);
+                    if(Storage::disk('local')->exists($targetFile)){
+                        $targetFilecontents = Storage::disk('local')->get($targetFile);
+                        Log::debug('$targetFilecontents: '.$targetFilecontents);
+                        $magick_input_file = storage_path('app').DIRECTORY_SEPARATOR.$targetFile;
+                        $magick_output_file = $magick_input_file . '.png';
+                        Log::debug('$magick_input_file: '.$magick_input_file);
+                        Log::debug('$magick_output_file: '.$magick_output_file);
 
-                            $shell_cmd = 'magick -density 400 "' . $magick_input_file . '[0]" "' . $magick_output_file . '"';
-                            Log::debug('shell_cmd: ' . $shell_cmd);
-                            $output = shell_exec($shell_cmd);
-                            Log::debug('output: ' . print_r($output, true));
-
-                            $inputStream2 = Storage::getDriver()->readStream($targetFile.'.png');
-                            $targetFilePath2 = 'documents/' . $stored . '.png';
-                            Log::debug('$inputStream2: '.$targetFile.'.png');
-                            Log::debug('$targetFilePath2: '.$targetFilePath2);
-                            Storage::disk('local')->getDriver()->writeStream($targetFilePath2, $inputStream2);
-
-                            Storage::disk('local')->delete($targetFile);
-                            Storage::disk('local')->delete($targetFile.'.png');
+                        $convert_command = 'convert'; // Linux
+                        if (DIRECTORY_SEPARATOR == '\\') {
+                            $convert_command = 'magick'; // Windows
                         }
+                        $shell_cmd = $convert_command.' -density 400 "' . $magick_input_file . '[0]" "' . $magick_output_file .  '"';
+                        Log::debug('shell_cmd: ' . $shell_cmd);
+                        $output = shell_exec($shell_cmd);
+                        Log::debug('output: ' . print_r($output, true));
 
-                        if (Storage::exists($magick_output_file)) {
+                        $inputStream2 = Storage::getDriver()->readStream($targetFile.'.png');
+                        $targetFilePath2 = 'documents/' . $stored . '.png';
+                        Log::debug('$inputStream2: '.$targetFile.'.png');
+                        Log::debug('$targetFilePath2: '.$targetFilePath2);
+                        Storage::disk('local')->getDriver()->writeStream($targetFilePath2, $inputStream2);
+
+                        Storage::disk('local')->delete($targetFile);
+                        Storage::disk('local')->delete($targetFile.'.png');
+                    }
+
+                    if (Storage::exists($magick_output_file)) {
+                        if (null === $music->cover || '' === $music->cover || (strrpos($older_music_cover, '.pdf.png') === strlen($older_music_cover) - strlen('.pdf.png'))) {
                             $music->cover = $music->document . '.png';
                         }
                     }
