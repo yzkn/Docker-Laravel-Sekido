@@ -24,6 +24,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/audioapp.css') }}" rel="stylesheet">
     <link href="{{ asset('css/calendar.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/visualizer.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -140,15 +141,15 @@
         </div>
         @endif
 
-        <div class="row col-md-11">
-            <div class="col-md-6 offset-md-1 main">
+        <div class="row">
+            <div class="col-md-7 main">
                 <main class="py-4">
                     @yield('content')
                 </main>
             </div>
             @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-            <aside class="col-md-3 offset-md-1 my-5 p-4 sidebar bg-light rounded">
-                <div class="p-4 my-1">
+            <aside class="col-md-4 my-4 p-4 sidebar bg-light rounded">
+                <div class="p-4">
                     <h4 class="font-italic">概要</h4>
                     <p class="mb-1">
                         {{ Auth::user()->name }}さんとしてログインしています。

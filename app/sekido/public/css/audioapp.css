@@ -3,6 +3,10 @@
     height: 36px;
 }
 
+.music-jumbotron-thumbnail {
+    width: 90%;
+}
+
 .cover-cloud-item-thumbnail {
     width: 72px;
     height: 72px;
@@ -11,6 +15,11 @@
 .icon {
     width: 24px;
     height: 24px;
+}
+
+#twitter_share .icon {
+    margin-left: -24px !important;
+    margin-bottom: 18px !important;
 }
 
 .info {
