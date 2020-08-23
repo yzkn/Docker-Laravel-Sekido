@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <div>
+    <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand px-5" href="{{ url('/') }}">
                 {{ config('app.name', 'Sekido') }}
