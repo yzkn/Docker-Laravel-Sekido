@@ -150,11 +150,9 @@ class MusicController extends Controller
             $column = $request->column;
         }
 
-        try {
-            // PostgreSQL
+        if('local'===config('filesystems.default', 'pgsql')){
             $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column . ', count(*) AS count, sum( to_number( playtime_seconds , \'99G999D9S\') ) AS playtime_sum')->groupBy($column)->having($column, '<>', '')->get();
-        } catch (PDOException $th) {
-            // MySQL
+        } else { // } else if('local'===config('filesystems.default', 'mysql')){
             $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column . ', count(*) AS count, sum( cast( playtime_seconds as signed) ) AS playtime_sum')->groupBy($column)->having($column, '<>', '')->get();
         }
 
