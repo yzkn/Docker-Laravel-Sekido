@@ -65,7 +65,7 @@
                     @isset ($playlist->musics)
                     @if (count($playlist->musics)>0)
                     <a id="twitter_share" href="#" target="_blank">
-                        <img class="icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
+                        <img class="pl-icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
                     </a>
                     @endif
                     @endisset
@@ -78,34 +78,47 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <a href="#" class="musicitem" data-src="{{ (route('home').$music->path) }}" id="{{ $music->id }}">
                         <img src="{{route('home')}}{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
+                        {{$music->title}}
                         <span class="info">
                             <span class="artist">{{$music->artist}}</span> / <span class="album">{{$music->album}}</span> / <span class="title">{{$music->title}}</span>
                         </span>
                     </a>
                     <span>
-                        <!-- <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button> -->
                         <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
-                            Artist
+                            <small>{{$music->artist}}</small>
                         </a>
                         <form id="music-search-artist-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
                             @csrf
                             <input type="hidden" name="artist" value="{{ $music->artist }}">
                         </form>
-                        <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
-                            Title
-                        </a>
-                        <form id="music-search-album-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
-                            @csrf
-                            <input type="hidden" name="album" value="{{ $music->album }}">
-                        </form>
                         <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-album-form-{{ $key }}').submit();">
-                            Album
+                            <small>{{$music->album}}</small>
                         </a>
                         <form id="music-search-album-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
                             @csrf
                             <input type="hidden" name="album" value="{{ $music->album }}">
                         </form>
-                        <a role="button" href="{{ url('music/' . $music->id) }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
+                        <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
+                            <small>{{$music->title}}</small>
+                        </a>
+                        <form id="music-search-title-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                            @csrf
+                            <input type="hidden" name="title" value="{{ $music->title }}">
+                        </form>
+
+                        @if('' !== $music->related_works)
+                            <a role="button" href="#" class="btn btn-sm btn-outline-success" onclick="event.preventDefault();document.getElementById('music-search-related_works-form-{{ $key }}').submit();">
+                                <small>{{$music->related_works}}</small>
+                            </a>
+                            <form id="music-search-related_works-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="related_works" value="{{ $music->related_works }}">
+                            </form>
+                        @endif
+
+                        <a href="{{ url('music/'.$music->id) }}" target="_blank">
+                            <img class="icon mx-1" src="{{ asset('icon/tab.png') }}" alt="">
+                        </a>
                     </span>
                 </li>
                 @endforeach
@@ -115,10 +128,6 @@
     </div>
 </div>
 
-<script
-    src="https://code.jquery.com/jquery-3.5.1.min.js"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-    crossorigin="anonymous"></script>
 <script src="{{ asset('js/audio.js') }}"></script>
 <script src="{{ asset('js/audioapp.js') }}"></script>
 @endsection

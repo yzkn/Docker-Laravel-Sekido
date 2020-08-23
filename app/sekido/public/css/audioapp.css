@@ -17,6 +17,11 @@
     height: 24px;
 }
 
+.pl-icon {
+    width: 24px;
+    height: 24px;
+}
+
 #twitter_share .icon {
     margin-left: -24px !important;
     margin-bottom: 18px !important;

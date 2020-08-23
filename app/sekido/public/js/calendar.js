@@ -1,3 +1,4 @@
+
 function createMonthCalendarObj(year, month) {
     // カウントアップする日付
     let date = 1;
@@ -58,16 +59,16 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
     const calendar = monthCalendarObj.calendar;
 
     const table = $(`
-    <table class="table table-bordered table-sm table-calendar">
-        <caption></caption>
-        <thead>
-            <tr>
-            <th class="sun">S</th><th class="mon">M</th><th class="tue">T</th><th class="wed">W</th><th class="thu">T</th><th class="fri">F</th><th class="sat">S</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-        </table>
-    `);
+            <table class="table table-bordered table-sm table-calendar">
+                <caption></caption>
+                <thead>
+                    <tr>
+                    <th class="sun">S</th><th class="mon">M</th><th class="tue">T</th><th class="wed">W</th><th class="thu">T</th><th class="fri">F</th><th class="sat">S</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                </table>
+            `);
 
     // const japaneseYear = new Date(
     //     year,
@@ -80,14 +81,14 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
         .children("caption")
         .html(
             '<a href="' +
-                location.href.split("/music/")[0] +
-                "/music/search?created_at=" +
-                year +
-                "-" +
-                `${`0${month + 1}`.slice(-2)}` +
-                '">' +
-                `${year}年 ${`0${month + 1}`.slice(-2)}月` +
-                "</a>"
+            location.href.split("/music/")[0] +
+            "/music/search?created_at=" +
+            year +
+            "-" +
+            `${`0${month + 1}`.slice(-2)}` +
+            '">' +
+            `${year}年 ${`0${month + 1}`.slice(-2)}月` +
+            "</a>"
         );
 
     calendar.forEach((week, rowIndex) => {
@@ -95,14 +96,16 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
         week.forEach((day, colIndex) => {
             const col = $("<td>").html(
                 '<a href="' +
-                    location.href.split("/music/")[0] +
-                    "/music/search?created_at=-" +
-                    `${`0${month + 1}`.slice(-2)}` +
-                    "-" +
-                    `${`0${day}`.slice(-2)}` +
-                    '">' +
-                    day +
-                    "</a>"
+                (location.href.indexOf("/music/") > -1 ? location.href.split("/music/")[0] : (
+                    location.href.indexOf("/playlist/") > -1 ? location.href.split("/playlist/")[0] : ""
+                )) +
+                "/music/search?created_at=-" +
+                `${`0${month + 1}`.slice(-2)}` +
+                "-" +
+                `${`0${day}`.slice(-2)}` +
+                '">' +
+                day +
+                "</a>"
             );
             col.addClass(
                 ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][colIndex]

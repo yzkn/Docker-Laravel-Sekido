@@ -10,17 +10,12 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bubbly-bg@1.0.0/dist/bubbly-bg.js"></script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/bubbly.js') }}" defer></script>
-    <script src="{{ asset('js/calendar.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/audioapp.css') }}" rel="stylesheet">
     <link href="{{ asset('css/calendar.css') }}" rel="stylesheet">
@@ -256,8 +251,18 @@
 
                     <h5>最近追加</h5>
                     <ul class="list-group mb-3">
-                        @foreach (App\Music::where('user_id', Auth::user()->id)->latest()->limit(5)->get() as $music)
-                        <li class="list-group-item"><a href="{{ url('music/'.$music->id) }}">{{ $music->artist }} / {{ $music->title }}</a></li>
+                        @foreach (App\Music::where('user_id', Auth::user()->id)->latest()->limit(5)->get() as $key => $music)
+                        <li class="list-group-item">
+                            <a href="#" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
+                                {{ $music->artist }}
+                            </a>
+                            <form id="music-search-artist-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="artist" value="{{ $music->artist }}">
+                            </form>
+                            &nbsp;/&nbsp;
+                            <a href="{{ url('music/'.$music->id) }}">{{ $music->title }}</a>
+                        </li>
                         @endforeach
                     </ul>
 
@@ -281,7 +286,10 @@
                     <h5>最近追加</h5>
                     <ul class="list-group mb-3">
                         @foreach (App\Playlist::latest()->limit(3)->get() as $playlist)
-                            <li class="list-group-item"><a href="{{ url('playlist/'.$playlist->id) }}">{{ $playlist->title }}</a></li>
+                            <li class="list-group-item">
+                                <a href="{{ url('playlist/'.$playlist->id) }}">{{ $playlist->title }}</a>
+                                <span class="badge badge-info badge-pill ml-1 mr-5">{{ isset($playlist->musics) ? count($playlist->musics) : 0}}</span>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -306,6 +314,16 @@
             @endcan
         </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('js/bubbly-bg.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/bubbly.js') }}" defer></script>
+    <script src="{{ asset('js/calendar.js') }}" defer></script>
 </body>
 
 </html>

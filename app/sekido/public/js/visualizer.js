@@ -71,8 +71,12 @@ var start = function () {
     renderFrame();
 };
 
-$(function () {
-    audio.addEventListener('play', (event) => {
-        start();
-    });
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+        audio.addEventListener('play', (event) => {
+            start();
+        });
+    },
+    false
+);
