@@ -150,7 +150,14 @@ class MusicController extends Controller
             $column = $request->column;
         }
 
-        $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column . ', count(*) AS count, sum( to_number( playtime_seconds , \'99G999D9S\') ) AS playtime_sum')->groupBy($column)->having($column, '<>', '')->get();
+        try {
+            // PostgreSQL
+            $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column . ', count(*) AS count, sum( to_number( playtime_seconds , \'99G999D9S\') ) AS playtime_sum')->groupBy($column)->having($column, '<>', '')->get();
+        } catch (PDOException $th) {
+            // MySQL
+            $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column . ', count(*) AS count, sum( cast( playtime_seconds as signed) ) AS playtime_sum')->groupBy($column)->having($column, '<>', '')->get();
+        }
+
         Log::debug('musics: ' . $musics);
         return view('music.list', ['column' => $column, 'list_items' => $musics]);
     }
