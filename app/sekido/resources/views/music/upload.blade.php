@@ -52,13 +52,13 @@
     FileList.prototype.map = function(){
         return Array.prototype.map.call(this, ...arguments)
     }
-    $(function() {
+    window.onload = function(){
         $(document).on('change', ':file', function() {
             var input = $(this),
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = ((input.get(0).files.map(file => (file.name).replace(/\\/g, '/').replace(/.*\//, ''))).join(' , '));
             input.parent().parent().next(':text').val(label + ( numFiles < 2 ? '' : (' ほか 計' + numFiles + 'ファイル')));
         });
-    });
+    }
 </script>
 @endsection

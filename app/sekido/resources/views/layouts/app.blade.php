@@ -253,10 +253,10 @@
                     <ul class="list-group mb-3">
                         @foreach (App\Music::where('user_id', Auth::user()->id)->latest()->limit(5)->get() as $key => $music)
                         <li class="list-group-item">
-                            <a href="#" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
+                            <a href="#" onclick="event.preventDefault();document.getElementById('music-search-artist-sideform-{{ $key }}').submit();">
                                 {{ $music->artist }}
                             </a>
-                            <form id="music-search-artist-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                            <form id="music-search-artist-sideform-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
                                 @csrf
                                 <input type="hidden" name="artist" value="{{ $music->artist }}">
                             </form>
